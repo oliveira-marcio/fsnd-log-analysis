@@ -1,0 +1,28 @@
+1. Quais são os três artigos mais populares de todos os tempos? 
+
+Quais artigos foram os mais acessados? Apresente esta informação como uma lista organizada com o artigo mais popular no topo.
+
+Exemplo:
+
+"Princess Shellfish Marries Prince Handsome" — 1201 views
+"Baltimore Ravens Defeat Rhode Island Shoggoths" — 915 views
+"Political Scandal Ends In Political Scandal" — 553 views
+
+2. Quem são os autores de artigos mais populares de todos os tempos? 
+
+Isto é, quando você organizar todos os artigos que cada autor escreveu, quais autores obtiveram mais views? Apresente esta informação como uma lista organizada com o autor mais popular no topo.
+
+Exemplo:
+
+Ursula La Multa — 2304 views
+Rudolf von Treppenwitz — 1985 views
+Markoff Chaney — 1723 views
+Contribuidor anônimo — 1023 views
+
+3. Em quais dias mais de 1% das requisições resultaram em erros? 
+
+A tabela de logs inclui um status de coluna que indica o código de status HTTP que o site de notícias enviou ao navegador do usuário (consulte novamente esta aula se você quiser rever a ideia dos códigos de status HTTP).
+
+Exemplo:
+
+July 29, 2016 — 2.5% errors
