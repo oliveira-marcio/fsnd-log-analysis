@@ -9,18 +9,43 @@ to generate a TXT file with all questions and their results.
 
 questions = [
     {
-        "title": "Question 1",
+        "title": "What are the most popular three articles of all time?",
         "query": """
-                 select * from authors;
+                 select title, count(*) as views
+                 from articles, log
+                 where ('/article/' || slug) = path
+                 group by 1
+                 order by 2 desc
+                 limit 3
                  """,
-        "suffix": "views"
+        "suffix": " views"
     },
     {
-        "title": "Question 2",
+        "title": "Who are the most popular article authors of all time?",
         "query": """
-                 select * from articles;
+                 select aut.name, count(*) as views
+                 from authors aut, articles art, log
+                 where ('/article/' || art.slug) = log.path
+                 and aut.id = art.author
+                 group by 1
+                 order by 2 desc
                  """,
-        "suffix": "results"
+        "suffix": " views"
+    },
+    {
+        "title": "On which days did more than 1% of requests lead to errors?",
+        "query": """
+      select to_char(date_trunc('day', time), 'FMMonth FMDD, FMYYYY') as date,
+      trunc(cast(100*(count(*)::float / totals.total) as numeric), 2) as ratio
+      from log,
+           (select date_trunc('day', time) as date, count(*) as total
+            from log group by 1) as totals
+      where log.status not like '200%'
+      and date_trunc('day', log.time) = totals.date
+      group by 1, totals.total
+      having (count(*)::float / totals.total) > 0.01
+                 """,
+        "suffix": "% errors"
     }
 ]
 
@@ -39,14 +64,16 @@ def main():
     try:
         with open(filename, mode="w") as file:
             for index, question in enumerate(questions):
+                print("Fetching results ({}/{})...".format(
+                    index + 1, len(questions)))
                 rows = getAnalysis(question["query"])
                 file.write("{}) {}\n\n".format(index + 1, question["title"]))
                 for row in rows:
-                    file.write("{} - {} {}\n"
-                               .format(row[0], row[1], question["suffix"]))
+                    file.write("{} - {}{}\n".format(
+                        row[0], row[1], question["suffix"]))
                 file.write("\n\n")
 
-            print("File '{}' successfully saved.".format(filename))
+            print("\nFile '{}' successfully saved.".format(filename))
     except IOError as err:
         filename = ""
         print("I/O error: {}".format(err))
