@@ -35,7 +35,7 @@ questions = [
     {
         "title": "On which days did more than 1% of requests lead to errors?",
         "query": """
-      select to_char(date_trunc('day', time), 'FMMonth FMDD, FMYYYY') as date,
+      select to_char(time, 'FMMonth FMDD, FMYYYY') as date,
       trunc(cast(100*(count(*)::float / totals.total) as numeric), 2) as ratio
       from log,
            (select date_trunc('day', time) as date, count(*) as total
