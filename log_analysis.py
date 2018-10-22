@@ -35,15 +35,15 @@ questions = [
     {
         "title": "On which days did more than 1% of requests lead to errors?",
         "query": """
-      select to_char(time, 'FMMonth FMDD, FMYYYY') as date,
-      trunc(cast(100*(count(*)::float / totals.total) as numeric), 2) as ratio
-      from log,
-           (select date_trunc('day', time) as date, count(*) as total
-            from log group by 1) as totals
-      where log.status not like '200%'
-      and date_trunc('day', log.time) = totals.date
-      group by 1, totals.total
-      having (count(*)::float / totals.total) > 0.01
+                 select to_char(time, 'FMMonth FMDD, FMYYYY') as date,
+                 trunc((100.0 * count(*)) / totals.total, 2) as ratio
+                 from log,
+                    (select date_trunc('day', time) as date, count(*) as total
+                     from log group by 1) as totals
+                 where log.status not like '200%'
+                 and date_trunc('day', log.time) = totals.date
+                 group by 1, totals.total
+                 having ((1.0 * count(*)) / totals.total) > 0.01
                  """,
         "suffix": "% errors"
     }
